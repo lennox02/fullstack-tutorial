@@ -1,30 +1,60 @@
-import React from 'react';
+import React from "react";
+import * as Enzyme from "enzyme";
+import { configure } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import { MockedProvider } from "@apollo/client/testing";
+import ActionButton from "../action-button";
 
-import { renderApollo, cleanup } from '../../test-utils';
-import ActionButton from '../action-button';
-import { cartItemsVar } from '../../cache';
+configure({ adapter: new Adapter() });
 
-describe('action button', () => {
+describe("action button", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  let wrapper: Enzyme.ReactWrapper;
 
-  it('renders without error', () => {
-    const { getByTestId } = renderApollo(<ActionButton />);
-    expect(getByTestId('action-button')).toBeTruthy();
+  beforeEach(() => {
+    wrapper = Enzyme.mount(
+      <MockedProvider>
+        <ActionButton />
+      </MockedProvider>
+    );
   });
 
-  it('shows correct label', () => {
-    const { getByText, container } = renderApollo(<ActionButton />);
-    getByText(/add to cart/i);
+  afterEach(() => {
+    expect.hasAssertions();
+    wrapper.unmount();
+  });
 
-    // rerender with different props to same container
-    cartItemsVar(['1']);
-    renderApollo(<ActionButton id="1" />, { container });
-    getByText(/remove from cart/i);
-    cartItemsVar([]);
+  it("renders without error", () => {
+    //Assertions
+    expect(
+      wrapper.find('Styled(button)[data-testid="action-button"]').length
+    ).toBe(1);
+  });
 
-    // rerender with different props to same container
-    renderApollo(<ActionButton isBooked={true} />, { container });
-    getByText(/cancel this trip/i);
+  it("Add to Cart", () => {
+    //Assertions
+    expect(wrapper.find("ActionButton").text()).toEqual("Add to Cart");
+  });
+  it("Remove from Cart", () => {
+    wrapper = Enzyme.mount(
+      <MockedProvider>
+        <ActionButton id="1" isBooked={false} />
+      </MockedProvider>
+    );
+    //click action button to add to cart
+    wrapper.find("button").simulate("click");
+    wrapper.update();
+
+    //Assertions
+    expect(wrapper.find("ActionButton").text()).toEqual("Remove from Cart");
+  });
+  it("Cancel this Trip", () => {
+    wrapper = Enzyme.mount(
+      <MockedProvider>
+        <ActionButton isBooked={true} />
+      </MockedProvider>
+    );
+    //Assertions
+    expect(wrapper.find("ActionButton").text()).toEqual("Cancel This Trip");
   });
 });

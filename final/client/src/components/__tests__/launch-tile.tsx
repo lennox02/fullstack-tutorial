@@ -1,23 +1,42 @@
-import React from 'react';
+import React from "react";
+import * as Enzyme from "enzyme";
+import { configure } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import LaunchTile from "../launch-tile";
 
-import { render, cleanup } from '../../test-utils';
-import LaunchTile from '../launch-tile';
+configure({ adapter: new Adapter() });
 
-describe('Launch Tile', () => {
+describe("Launch Tile", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  let wrapper: Enzyme.ReactWrapper;
 
-  it('renders without error', () => {
-    render(
+  beforeEach(() => {
+    wrapper = Enzyme.mount(
       <LaunchTile
         launch={{
-          __typename: 'Launch',
+          __typename: "Launch",
           isBooked: false,
-          id: '1',
-          mission: { name: 'the first one', __typename: 'Mission', missionPatch: null },
-          rocket: { name: 'harambe', __typename: 'Rocket', id: '1' },
+          id: "1",
+          mission: {
+            name: "the first one",
+            __typename: "Mission",
+            missionPatch: null,
+          },
+          rocket: { name: "harambe", __typename: "Rocket", id: "1" },
         }}
-      />,
+      />
     );
+  });
+
+  afterEach(() => {
+    expect.hasAssertions();
+    wrapper.unmount();
+  });
+  it("renders without error", () => {
+    expect(wrapper.find("LaunchTile").length).toBe(1);
+    expect(wrapper.find("Link").length).toBe(1);
+    expect(wrapper.find("Location").length).toBe(1);
+    expect(wrapper.find("h3").text()).toEqual("the first one");
+    expect(wrapper.find("h5").text()).toEqual("harambe");
   });
 });
