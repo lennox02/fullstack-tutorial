@@ -1,41 +1,46 @@
-import React from 'react';
+import React from "react";
+import Enzyme from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import { MockedProvider } from "@apollo/client/testing";
+import { wait } from "../../test-utils";
+import Profile, { GET_MY_TRIPS } from "../profile";
 
-import {
-  renderApollo,
-  cleanup,
-  waitForElement,
-} from '../../test-utils';
-import Profile, { GET_MY_TRIPS } from '../profile';
+Enzyme.configure({ adapter: new Adapter() });
 
 const mockLaunch = {
-  __typename: 'Launch',
+  __typename: "Launch",
   id: 1,
   isBooked: true,
   rocket: {
-    __typename: 'Rocket',
+    __typename: "Rocket",
     id: 1,
-    name: 'tester',
+    name: "tester",
   },
   mission: {
-    __typename: 'Mission',
+    __typename: "Mission",
     id: 1,
-    name: 'test mission',
-    missionPatch: '/',
+    name: "test mission",
+    missionPatch: "/",
   },
 };
 
 const mockMe = {
-  __typename: 'User',
+  __typename: "User",
   id: 1,
-  email: 'a@a.a',
+  email: "a@a.a",
   trips: [mockLaunch],
 };
 
-describe('Profile Page', () => {
+describe("Profile Page", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  let wrapper: Enzyme.ReactWrapper;
 
-  it('renders profile page', async () => {
+  afterEach(() => {
+    expect.hasAssertions();
+    wrapper.unmount();
+  });
+
+  it("renders profile page", async () => {
     const mocks = [
       {
         request: { query: GET_MY_TRIPS },
@@ -43,9 +48,16 @@ describe('Profile Page', () => {
       },
     ];
 
-    const { getByText } = renderApollo(<Profile />, { mocks });
-
+    wrapper = Enzyme.mount(
+      <MockedProvider mocks={mocks}>
+        <Profile />
+      </MockedProvider>
+    );
     // if the profile renders, it will have the list of missions booked
-    await waitForElement(() => getByText(/test mission/i));
+    await wait(() => {
+      wrapper.update();
+      //Assertions
+      expect(wrapper.find("Profile h3").text()).toEqual("test mission");
+    });
   });
 });

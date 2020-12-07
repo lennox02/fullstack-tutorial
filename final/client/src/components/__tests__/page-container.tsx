@@ -1,13 +1,24 @@
-import React from 'react';
+import React from "react";
+import Enzyme from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import PageContainer from "../page-container";
 
-import { render, cleanup } from '../../test-utils';
-import PageContainer from '../page-container';
+Enzyme.configure({ adapter: new Adapter() });
 
-describe('Page Container', () => {
+describe("Page Container", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  let wrapper: Enzyme.ReactWrapper;
 
-  it('renders without error', () => {
-    render(<PageContainer />);
+  beforeEach(() => {
+    wrapper = Enzyme.mount(<PageContainer />);
+  });
+
+  afterEach(() => {
+    expect.hasAssertions();
+    wrapper.unmount();
+  });
+  it("renders without error", () => {
+    expect(wrapper.find("PageContainer").length).toBe(1);
+    expect(wrapper.find("Styled(div)").length).toBe(2);
   });
 });

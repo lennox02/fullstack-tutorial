@@ -1,13 +1,26 @@
-import React from 'react';
+import React from "react";
+import Enzyme from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import Button from "../button";
 
-import { render, cleanup } from '../../test-utils';
-import Button from '../button';
+Enzyme.configure({ adapter: new Adapter() });
 
-describe('Button', () => {
+describe("Button", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  let wrapper: Enzyme.ReactWrapper;
 
-  it('renders without error', () => {
-    render(<Button>Hello World</Button>);
+  beforeEach(() => {
+    wrapper = Enzyme.mount(<Button>Hello World</Button>);
+  });
+
+  afterEach(() => {
+    expect.hasAssertions();
+    wrapper.unmount();
+  });
+
+  it("renders without error", () => {
+    console.log(wrapper.debug());
+    expect(wrapper.find("button").length).toBe(1);
+    expect(wrapper.find("button").text()).toEqual("Hello World");
   });
 });
