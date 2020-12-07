@@ -1,10 +1,9 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import Header from "../header";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 describe("Header", () => {
   // automatically unmount and cleanup DOM after the test is finished.

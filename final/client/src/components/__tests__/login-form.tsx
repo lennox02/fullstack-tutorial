@@ -1,10 +1,9 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import LoginForm from "../login-form";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 describe("Login Form", () => {
   // automatically unmount and cleanup DOM after the test is finished.

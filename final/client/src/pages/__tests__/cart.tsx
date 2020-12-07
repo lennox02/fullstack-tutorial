@@ -1,6 +1,5 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { MockedProvider } from "@apollo/client/testing";
 import { wait } from "../../test-utils";
@@ -8,7 +7,7 @@ import Cart from "../cart";
 import { GET_LAUNCH } from "../../containers/cart-item";
 import { cache, cartItemsVar } from "../../cache";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 const mockLaunch = {
   __typename: "Launch",
@@ -40,6 +39,9 @@ describe("Cart Page", () => {
       </MockedProvider>
     );
     expect(wrapper.find('Cart p[data-testid="empty-message"]').length).toBe(1);
+    expect(wrapper.find('Cart p[data-testid="empty-message"]').text()).toEqual(
+      "No items in your cart"
+    );
   });
 
   it("renders cart", async () => {
@@ -62,6 +64,9 @@ describe("Cart Page", () => {
       expect(
         wrapper.find('BookTrips button[data-testid="book-button"]').length
       ).toBe(1);
+      expect(
+        wrapper.find('BookTrips button[data-testid="book-button"]').text()
+      ).toEqual("Book All");
     });
   });
 });

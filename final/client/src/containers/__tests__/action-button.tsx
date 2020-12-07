@@ -1,11 +1,10 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { MockedProvider } from "@apollo/client/testing";
 import ActionButton from "../action-button";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 describe("action button", () => {
   // automatically unmount and cleanup DOM after the test is finished.
@@ -54,6 +53,7 @@ describe("action button", () => {
         <ActionButton isBooked={true} />
       </MockedProvider>
     );
+
     //Assertions
     expect(wrapper.find("ActionButton").text()).toEqual("Cancel This Trip");
   });

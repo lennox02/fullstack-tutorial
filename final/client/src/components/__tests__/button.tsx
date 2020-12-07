@@ -1,10 +1,9 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import Button from "../button";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 describe("Button", () => {
   // automatically unmount and cleanup DOM after the test is finished.
@@ -20,6 +19,7 @@ describe("Button", () => {
   });
 
   it("renders without error", () => {
+    console.log(wrapper.debug());
     expect(wrapper.find("button").length).toBe(1);
     expect(wrapper.find("button").text()).toEqual("Hello World");
   });

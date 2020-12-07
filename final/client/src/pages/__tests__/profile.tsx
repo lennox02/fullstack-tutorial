@@ -1,12 +1,11 @@
 import React from "react";
-import * as Enzyme from "enzyme";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { MockedProvider } from "@apollo/client/testing";
-import { renderApollo, cleanup, waitForElement, wait } from "../../test-utils";
+import { wait } from "../../test-utils";
 import Profile, { GET_MY_TRIPS } from "../profile";
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
 const mockLaunch = {
   __typename: "Launch",
